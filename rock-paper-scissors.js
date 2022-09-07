@@ -56,12 +56,12 @@ function game() {
       return;
     }
 
-    let isValidSelection = checkValidSelection(playerSelection);
-    while (!isValidSelection) {
+    let validSelection = checkValidSelection(playerSelection);
+    while (!validSelection) {
       playerSelection = prompt(
         "Invalid selection. Please choose only rock, paper, or scissors: "
       );
-      isValidSelection = checkValidSelection(playerSelection);
+      validSelection = checkValidSelection(playerSelection);
     }
 
     let computerSelection = getComputerChoice();
@@ -93,11 +93,11 @@ function game() {
 function checkValidSelection(playerSelection) {
   if (playerSelection) {
     playerSelection = playerSelection.toLowerCase();
-    let isValidSelection =
+    let validSelection =
       playerSelection === "rock" ||
       playerSelection === "paper" ||
       playerSelection === "scissors";
-    return isValidSelection;
+    return validSelection;
   } else {
     return false;
   }
