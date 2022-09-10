@@ -1,5 +1,5 @@
 function getComputerChoice() {
-  const choices = ["rock", "paper", "scissors"];
+  const choices = ["Rock", "Paper", "Scissors"];
   let randomArrayIndex = Math.floor(Math.random() * choices.length);
   let choice = choices[randomArrayIndex];
   return choice;
@@ -7,43 +7,42 @@ function getComputerChoice() {
 
 function playRound(playerSelection, computerSelection, scoreboard) {
   const scores = document.querySelector(".scores");
-  const roundResults = document.querySelector(".round-results");
-  const roundResult = document.createElement("p");
-  roundResults.appendChild(roundResult);
+  const roundResult = document.querySelector(".round-result");
+  let resultStr = "";
 
   if (playerSelection === "rock" && computerSelection === "rock") {
-    roundResult.textContent = "It's a Tie! Both players chose Rock";
+    resultStr += "It's a Tie! Both players chose Rock";
     scores.textContent = `Player: ${(scoreboard.playerScore += 0.5)} Computer: ${(scoreboard.computerScore += 0.5)}`;
   } else if (playerSelection === "rock" && computerSelection === "paper") {
-    roundResult.textContent = "You Lose! Paper beats Rock";
+    resultStr += "You Lose! Paper beats Rock";
     scores.textContent = `Player: ${
       scoreboard.playerScore
     } Computer: ${(scoreboard.computerScore += 1)}`;
   } else if (playerSelection === "rock" && computerSelection === "scissors") {
-    roundResult.textContent = "You Win! Rock beats Scissors";
+    resultStr += "You Win! Rock beats Scissors";
     scores.textContent = `Player: ${(scoreboard.playerScore += 1)} Computer: ${
       scoreboard.computerScore
     }`;
   } else if (playerSelection === "paper" && computerSelection === "rock") {
-    roundResult.textContent = "You Win! Paper beats Rock";
+    resultStr += "You Win! Paper beats Rock";
     scores.textContent = `Player: ${(scoreboard.playerScore += 1)} Computer: ${
       scoreboard.computerScore
     }`;
   } else if (playerSelection === "paper" && computerSelection === "paper") {
-    roundResult.textContent = "It's a Tie! Both players chose Paper";
+    resultStr += "It's a Tie! Both players chose Paper";
     scores.textContent = `Player: ${(scoreboard.playerScore += 0.5)} Computer: ${(scoreboard.computerScore += 0.5)}`;
   } else if (playerSelection === "paper" && computerSelection === "scissors") {
-    roundResult.textContent = "You Lose! Scissors beats Paper";
+    resultStr += "You Lose! Scissors beats Paper";
     scores.textContent = `Player: ${
       scoreboard.playerScore
     } Computer: ${(scoreboard.computerScore += 1)}`;
   } else if (playerSelection === "scissors" && computerSelection === "rock") {
-    roundResult.textContent = "You Lose! Rock beats Scissors";
+    resultStr += "You Lose! Rock beats Scissors";
     scores.textContent = `Player: ${
       scoreboard.playerScore
     } Computer: ${(scoreboard.computerScore += 1)}`;
   } else if (playerSelection === "scissors" && computerSelection === "paper") {
-    roundResult.textContent = "You Win! Scissors beats Paper";
+    resultStr += "You Win! Scissors beats Paper";
     scores.textContent = `Player: ${(scoreboard.playerScore += 1)} Computer: ${
       scoreboard.computerScore
     }`;
@@ -51,9 +50,11 @@ function playRound(playerSelection, computerSelection, scoreboard) {
     playerSelection === "scissors" &&
     computerSelection === "scissors"
   ) {
-    roundResult.textContent = "It's a Tie! Both players chose Scissors";
+    resultStr += "It's a Tie! Both players chose Scissors";
     scores.textContent = `Player: ${(scoreboard.playerScore += 0.5)} Computer: ${(scoreboard.computerScore += 0.5)}`;
   }
+
+  roundResult.textContent = "Round Result: " + resultStr;
 
   const isWinner = scoreboard.playerScore >= 5 || scoreboard.computerScore >= 5;
   if (isWinner) {
@@ -67,10 +68,19 @@ function game() {
 
   const buttons = document.querySelectorAll("button");
   buttons.forEach((button) => {
-    let playerSelection = button.textContent;
-    playerSelection = playerSelection.toLowerCase();
-    button.onclick = () =>
-      playRound(playerSelection, getComputerChoice(), scoreboard);
+    button.onclick = () => {
+      let playerSelection = button.textContent;
+      let computerSelection = getComputerChoice();
+
+      const playerChoice = document.querySelector(".player-choice");
+      const computerChoice = document.querySelector(".computer-choice");
+      playerChoice.textContent = `Player Choice: ${playerSelection}`;
+      computerChoice.textContent = `Computer Choice: ${computerSelection}`;
+
+      playerSelection = playerSelection.toLowerCase();
+      computerSelection = computerSelection.toLowerCase();
+      playRound(playerSelection, computerSelection, scoreboard);
+    };
   });
 }
 
