@@ -5,102 +5,93 @@ function getComputerChoice() {
   return choice;
 }
 
-function playRound(playerSelection, computerSelection) {
-  let winner = "";
-  playerSelection = playerSelection.toLowerCase();
+function playRound(playerSelection, computerSelection, scoreboard) {
+  const scores = document.querySelector(".scores");
+  const roundResults = document.querySelector(".round-results");
+  const roundResult = document.createElement("p");
+  roundResults.appendChild(roundResult);
 
   if (playerSelection === "rock" && computerSelection === "rock") {
-    console.log("It's a Tie! Both players chose Rock");
-    winner = "both";
+    roundResult.textContent = "It's a Tie! Both players chose Rock";
+    scores.textContent = `Player: ${(scoreboard.playerScore += 0.5)} Computer: ${(scoreboard.computerScore += 0.5)}`;
   } else if (playerSelection === "rock" && computerSelection === "paper") {
-    console.log("You Lose! Paper beats Rock");
-    winner = "computer";
+    roundResult.textContent = "You Lose! Paper beats Rock";
+    scores.textContent = `Player: ${
+      scoreboard.playerScore
+    } Computer: ${(scoreboard.computerScore += 1)}`;
   } else if (playerSelection === "rock" && computerSelection === "scissors") {
-    console.log("You Win! Rock beats Scissors");
-    winner = "player";
+    roundResult.textContent = "You Win! Rock beats Scissors";
+    scores.textContent = `Player: ${(scoreboard.playerScore += 1)} Computer: ${
+      scoreboard.computerScore
+    }`;
   } else if (playerSelection === "paper" && computerSelection === "rock") {
-    console.log("You Win! Paper beats Rock");
-    winner = "player";
+    roundResult.textContent = "You Win! Paper beats Rock";
+    scores.textContent = `Player: ${(scoreboard.playerScore += 1)} Computer: ${
+      scoreboard.computerScore
+    }`;
   } else if (playerSelection === "paper" && computerSelection === "paper") {
-    console.log("It's a Tie! Both players chose Paper");
-    winner = "both";
+    roundResult.textContent = "It's a Tie! Both players chose Paper";
+    scores.textContent = `Player: ${(scoreboard.playerScore += 0.5)} Computer: ${(scoreboard.computerScore += 0.5)}`;
   } else if (playerSelection === "paper" && computerSelection === "scissors") {
-    console.log("You Lose! Scissors beats Paper");
-    winner = "computer";
+    roundResult.textContent = "You Lose! Scissors beats Paper";
+    scores.textContent = `Player: ${
+      scoreboard.playerScore
+    } Computer: ${(scoreboard.computerScore += 1)}`;
   } else if (playerSelection === "scissors" && computerSelection === "rock") {
-    console.log("You Lose! Rock beats Scissors");
-    winner = "computer";
+    roundResult.textContent = "You Lose! Rock beats Scissors";
+    scores.textContent = `Player: ${
+      scoreboard.playerScore
+    } Computer: ${(scoreboard.computerScore += 1)}`;
   } else if (playerSelection === "scissors" && computerSelection === "paper") {
-    console.log("You Win! Scissors beats Paper");
-    winner = "player";
+    roundResult.textContent = "You Win! Scissors beats Paper";
+    scores.textContent = `Player: ${(scoreboard.playerScore += 1)} Computer: ${
+      scoreboard.computerScore
+    }`;
   } else if (
     playerSelection === "scissors" &&
     computerSelection === "scissors"
   ) {
-    console.log("It's a Tie! Both players chose Scissors");
-    winner = "both";
+    roundResult.textContent = "It's a Tie! Both players chose Scissors";
+    scores.textContent = `Player: ${(scoreboard.playerScore += 0.5)} Computer: ${(scoreboard.computerScore += 0.5)}`;
   }
 
-  return winner;
+  const isWinner = scoreboard.playerScore >= 5 || scoreboard.computerScore >= 5;
+  if (isWinner) {
+    displayWinner(scoreboard);
+    endGame();
+  }
 }
 
 function game() {
-  let playerScore = 0;
-  let computerScore = 0;
-  const ROUNDS_TO_PLAY = 5;
+  const scoreboard = { playerScore: 0, computerScore: 0 };
 
-  for (round = 1; round <= ROUNDS_TO_PLAY; round++) {
-    let playerSelection = prompt("Choose rock, paper, or scissors: ");
+  const buttons = document.querySelectorAll("button");
+  buttons.forEach((button) => {
+    let playerSelection = button.textContent;
+    playerSelection = playerSelection.toLowerCase();
+    button.onclick = () =>
+      playRound(playerSelection, getComputerChoice(), scoreboard);
+  });
+}
 
-    if (playerSelection === null) {
-      return;
-    }
+function displayWinner(scoreboard) {
+  const winner = document.querySelector(".winner");
+  winner.style.backgroundColor = "yellow";
 
-    let validSelection = checkValidSelection(playerSelection);
-    while (!validSelection) {
-      playerSelection = prompt(
-        "Invalid selection. Please choose only rock, paper, or scissors: "
-      );
-      validSelection = checkValidSelection(playerSelection);
-    }
-
-    let computerSelection = getComputerChoice();
-
-    let roundWinner = playRound(playerSelection, computerSelection);
-    if (roundWinner === "player") {
-      playerScore += 1;
-    } else if (roundWinner === "computer") {
-      computerScore += 1;
-    } else {
-      playerScore += 0.5;
-      computerScore += 0.5;
-    }
-
-    console.log(
-      `Results after round ${round}: player: ${playerScore} - computer: ${computerScore}`
-    );
-  }
-
-  if (playerScore > computerScore) {
-    console.log("Player is the winner");
-  } else if (playerScore < computerScore) {
-    console.log("Computer is the winner");
+  if (scoreboard.playerScore > scoreboard.computerScore) {
+    winner.textContent = "Player is the winner";
+  } else if (scoreboard.playerScore < scoreboard.computerScore) {
+    winner.textContent = "Computer is the winner";
   } else {
-    console.log("It is a draw");
+    winner.textContent = "It is a draw";
   }
 }
 
-function checkValidSelection(playerSelection) {
-  if (playerSelection) {
-    playerSelection = playerSelection.toLowerCase();
-    let validSelection =
-      playerSelection === "rock" ||
-      playerSelection === "paper" ||
-      playerSelection === "scissors";
-    return validSelection;
-  } else {
-    return false;
-  }
+function endGame() {
+  const buttons = document.querySelectorAll("button");
+  buttons.forEach((button) => {
+    button.onclick = null;
+  });
 }
 
 game();
